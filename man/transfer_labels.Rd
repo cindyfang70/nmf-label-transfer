@@ -12,7 +12,7 @@ transfer_labels(source, target)
 \item{target}{A SingleCellExperiment or SpatialExperiment object to transfer labels into}
 }
 \value{
-A SingleCellExperiment or SpatialExperiment objec
+A SingleCellExperiment or SpatialExperiment object
 }
 \description{
 Transfer labels from the source dataset to the target dataset
