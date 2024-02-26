@@ -8,3 +8,11 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
+Imports:
+  SingleCellExperiment,
+  SpatialExperiment,
+  RcppML,
+  singlet,
+  SummarizedExperiment,
+  nnet,
+  methods
