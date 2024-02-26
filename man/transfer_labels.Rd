@@ -4,12 +4,18 @@
 \alias{transfer_labels}
 \title{Transfer labels from the source dataset to the target dataset}
 \usage{
-transfer_labels(source, target)
+transfer_labels(source, target, assay, annotationsName, seed = 123)
 }
 \arguments{
 \item{source}{A SingleCellExperiment or SpatialExperiment object with cell-type or spatial domain labels}
 
 \item{target}{A SingleCellExperiment or SpatialExperiment object to transfer labels into}
+
+\item{assay}{Name of the assay in \code{source} to use for NMF}
+
+\item{annotationsName}{Name of the annotations in \code{source} as found in the \code{colData}}
+
+\item{seed}{A random seed}
 }
 \value{
 A SingleCellExperiment or SpatialExperiment object
