@@ -8,7 +8,8 @@
 #' @import nnet
 
 fit_multinom_model <- function(factors, source_annotations){
-  design <- cbind(annot=source_annotations, factors)
+  design <- as.data.frame(cbind(annot=source_annotations, factors))
+  print(head(design))
 
   mod <-  nnet::multinom(annot ~ ., data = design,
                    na.action=na.exclude, maxit=1000)
