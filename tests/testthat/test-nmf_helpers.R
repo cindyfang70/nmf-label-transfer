@@ -1,4 +1,4 @@
-test_that("multiplication works", {
+test_that("outputted NMF factors are all nonnegative", {
   # get the annotated source data
   ehub <- ExperimentHub::ExperimentHub()
   layer_labs <- "BayesSpace_harmony_09"
@@ -9,6 +9,26 @@ test_that("multiplication works", {
 
   # get the unannotated target data
   data(sfe)
+
+  source_nmf_mod <- run_nmf(data=vis_anno_sub, assay="logcounts", k=10,
+                            seed=seed)
+
+  source_factors <- t(source_nmf_mod$h)
+
+  expect_equal(sum(source_factors >= 0), length(source_factors))
+})
+
+test_that("predicted probabilities are in [0,1]",{
+  # get the annotated source data
+  ehub <- ExperimentHub::ExperimentHub()
+  layer_labs <- "BayesSpace_harmony_09"
+  data_type <- "spatialDLPFC_Visium"
+  vis_anno <- spatialLIBD::fetch_data(type = data_type, eh = ehub)
+
+  vis_anno_sub <- vis_anno[,which(vis_anno$sample_id %in% unique(vis_anno$sample_id)[1:2])]
+
+  # get the unannotated target data
+  data(spe)
 
   source_nmf_mod <- run_nmf(data=vis_anno_sub, assay="logcounts", k=10,
                             seed=seed)
@@ -26,13 +46,12 @@ test_that("multiplication works", {
   multinom_mod <- fit_multinom_model(factors_use, colData(vis_anno_sub)[[layer_labs]])
 
 
-  sfe <- scuttle::logNormCounts(sfe)
-  projections <- project_factors(vis_anno_sub, sfe, assay="logcounts", source_nmf_mod)
+  spe <- scuttle::logNormCounts(spe)
+  projections <- project_factors(vis_anno_sub, spe, assay="logcounts", source_nmf_mod)
 
   probs <- predict(multinom_mod, newdata=projections, type='probs',
                    na.action=na.exclude)
 
-  preds <- unlist(lapply(1:nrow(probs), function(xx){
-    colnames(probs)[which.max(probs[xx,])]
-  }))
+  expect_equal(sum(probs >= 0 & probs <= 1), length(probs))
+  expect_equal(as.vector(rowSums(probs)), rep(1, nrow(probs)))
 })
