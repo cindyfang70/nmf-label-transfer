@@ -8,7 +8,11 @@ test_that("label transfer works", {
   vis_anno_sub <- vis_anno[,which(vis_anno$sample_id %in% unique(vis_anno$sample_id)[1:2])]
 
   # get the unannotated target data
-  data(sfe)
+  data(spe)
+  rowData(spe)$gene_name <- rownames(spe)
+  spe <- scuttle::logNormCounts(spe)
 
-  sfe_annot <- transfer_labels(vis_anno_sub, sfe, "logcounts", layer_labs)
+  preds <- transfer_labels(vis_anno_sub, spe, "logcounts", layer_labs)
+
+  expect_true(length(preds)==ncol(spe))
 })
