@@ -16,7 +16,7 @@ run_nmf<- function(data, assay, k=NULL, seed=1237){
   message("Running NMF")
 
   if(is.null(k)){
-    warning("Number of factors for NMF not specified. Using cross-validation to idenitfy optimal number of clusters", immediate. = TRUE)
+    warning("Number of factors for NMF not specified. Using cross-validation to idenitfy optimal number of factors.", immediate. = TRUE)
       #k <- find_num_factors(A)
     model <- run_rank_determination_nmf(data, assay)
   }else{
