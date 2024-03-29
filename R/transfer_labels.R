@@ -12,16 +12,34 @@
 #' @import SummarizedExperiment
 #' @import methods
 #' @export
-transfer_labels <- function(source, target, assay, annotationsName, seed=123) {
+transfer_labels <- function(source, target, assay="logcounts", annotationsName, seed=123,...) {
 
   if(is(source, "SpatialExperiment")){
-    stopifnot(assay %in% assayNames(source))
-    stopifnot(annotationsName %in% colnames(colData(source)))
+    if (!(assay %in% assayNames(source))){
+      stop(sprintf("Assay %s not found in the source dataset. %s needs to be available in both the source and target datasets.", assay, assay))
+    }
+    if(!(annotationsName %in% colnames(colData(source)))){
+      stop(sprintf("%s is not found in the colData of the source dataset.", annotationsName))
+    }
+    if(!("gene_name" %in% colnames(rowData(source)))){
+      stop("Please provide gene symbols in your source dataset as a column named 'gene_name' in rowData.")
+    }
+
+  }
+
+  if (is(target,"SpatialExperiment")){
+    if (!(assay %in% assayNames(target))){
+      stop(sprintf("Assay %s is not found in the target dataset. %s needs to be available in both the source and target datasets.", assay, assay))
+    }
+
+    if(!("gene_name" %in% colnames(rowData(target)))){
+      stop("Please provide gene symbols in your target dataset as a column named 'gene_name' in rowData.")
+    }
+
   }
 
   # 1: run NMF on the source dataset
-  source_nmf_mod <- run_nmf(data=source, assay="logcounts", k=100,
-                            seed=seed)
+  source_nmf_mod <- run_nmf(data=source, assay=assay, seed=seed, ...)
 
   source_factors <- t(source_nmf_mod$h)
   colnames(source_factors) <- paste0("NMF", 1:ncol(source_factors))
@@ -30,18 +48,15 @@ transfer_labels <- function(source, target, assay, annotationsName, seed=123) {
   annots<- colData(source)[[annotationsName]]
   factor_annot_cors <- compute_factor_correlations(source_factors, annots)
   factors_use <- identify_factors_representing_annotations(factor_annot_cors)
-  print(factors_use)
+
   # 3: fit multinomial model on source factors
-
-
   factors_use <- source_factors[,factors_use]
-  print(head(factors_use))
   multinom_mod <- fit_multinom_model(factors_use, annots)
 
   # 4: project patterns onto target dataset
   projections <- project_factors(source, target, assay, source_nmf_mod)
 
-   # 5: predict annotations on target factors
+  # 5: predict annotations on target factors
 
   probs <- predict(multinom_mod, newdata=projections, type='probs',
                    na.action=na.exclude)

@@ -38,10 +38,8 @@ identify_factors_representing_annotations <- function(correlations, n_factors_pe
     domain <- domain[! names(domain) %in% selected_factors]
     ord_domain <- domain[order(abs(domain), decreasing=TRUE)]
     top_fcts <- names(ord_domain[1:n_factors_per_annot])
-    print(top_fcts)
 
     new.fcts <- setdiff(top_fcts, selected_factors) # keep the factor only if it's not already been included
-    print(new.fcts)
     selected_factors <- c(selected_factors, new.fcts)
   }
   selected_factors <- selected_factors[!is.na(selected_factors)]
