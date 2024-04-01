@@ -29,6 +29,7 @@ test_that("predicted probabilities are in [0,1]",{
 
   # get the unannotated target data
   data(spe)
+  rowData(spe)$gene_name <- rownames(rowData(spe))
 
   source_nmf_mod <- run_nmf(data=vis_anno_sub, assay="logcounts", k=10,
                             seed=seed)
@@ -39,10 +40,8 @@ test_that("predicted probabilities are in [0,1]",{
   annots<- colData(vis_anno_sub)[[layer_labs]]
   factor_annot_cors <- compute_factor_correlations(source_factors, annots)
   factors_use <- identify_factors_representing_annotations(factor_annot_cors)
-  print(factors_use)
 
   factors_use <- source_factors[,factors_use]
-  print(head(factors_use))
   multinom_mod <- fit_multinom_model(factors_use, colData(vis_anno_sub)[[layer_labs]])
 
 
