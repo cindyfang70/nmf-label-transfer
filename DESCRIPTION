@@ -17,8 +17,10 @@ Imports:
   nnet,
   methods
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    S4Vectors
 Config/testthat/edition: 3
 Depends: 
-    R (>= 2.10)
+    R (>= 2.10),
+    SingleCellExperiment
 LazyData: true
