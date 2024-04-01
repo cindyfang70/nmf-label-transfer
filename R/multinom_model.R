@@ -3,7 +3,7 @@
 #' @param factors a matrix of factors from NMF
 #' @param source_annotations a vector of annotations
 #'
-#' @return
+#' @return A multinomial model object
 #'
 #' @import nnet
 

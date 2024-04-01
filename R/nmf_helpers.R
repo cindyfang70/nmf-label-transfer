@@ -39,9 +39,21 @@ find_num_factors <- function(A, ranks = c(50,100,200)){
   return(num_factors)
 }
 
+#' run_rank_determination_nmf
+#'
+#' @param data A SingleCellExperiment or SpatialExperiment object
+#' @param assay
+#'
+#' @return
+#' @import RcppML singlet SummarizedExperiment SingleCellExperiment S4Vectors, SpatialExperiment
+#' @examples
 run_rank_determination_nmf <- function(data, assay){
+  requireNamespace("SingleCellExperiment")
+  requireNamespace("singlet")
+  requireNamespace("SummarizedExperiment")
+  requireNamespace("S4Vectors")
   data_nmf <- singlet::RunNMF(data)
-  nmf_mod <- SingleCellExperiment::metadata(data_nmf)$nmf_model
+  nmf_mod <- S4Vectors::metadata(data_nmf)$nmf_model
   return(nmf_mod)
 }
 
@@ -58,7 +70,7 @@ project_factors <- function(source, target, assay, nmf_model){
 
   if(is(source, "SpatialExperiment")){
     if (!(assay %in% assayNames(source))){
-      stop(sprintf("Assay %s not found in the target dataset. %s needs to be available in both the source and target datasets.", assay, assay))
+      stop(sprintf("Assay %s not found in the source dataset. %s needs to be available in both the source and target datasets.", assay, assay))
     }
 
     if(!("gene_name" %in% colnames(rowData(source)))){
