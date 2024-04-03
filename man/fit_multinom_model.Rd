@@ -11,6 +11,9 @@ fit_multinom_model(factors, source_annotations)
 
 \item{source_annotations}{a vector of annotations}
 }
+\value{
+A multinomial model object
+}
 \description{
 Fit a multinomial modelto predict annotation using NMF factors as covariates.
 }

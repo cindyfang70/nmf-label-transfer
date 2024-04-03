@@ -4,7 +4,14 @@
 \alias{transfer_labels}
 \title{Transfer labels from the source dataset to the target dataset}
 \usage{
-transfer_labels(source, target, assay, annotationsName, seed = 123)
+transfer_labels(
+  source,
+  target,
+  assay = "logcounts",
+  annotationsName,
+  seed = 123,
+  ...
+)
 }
 \arguments{
 \item{source}{A SingleCellExperiment or SpatialExperiment object with cell-type or spatial domain labels}
@@ -16,6 +23,8 @@ transfer_labels(source, target, assay, annotationsName, seed = 123)
 \item{annotationsName}{Name of the annotations in \code{source} as found in the \code{colData}}
 
 \item{seed}{A random seed}
+
+\item{...}{Additional parameters passed to \code{run_nmf}}
 }
 \value{
 A SingleCellExperiment or SpatialExperiment object

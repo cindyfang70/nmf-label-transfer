@@ -4,10 +4,10 @@
 \alias{compute_factor_correlations}
 \title{Compute correlation of each NMF factor with annotations in the source dataset}
 \usage{
-compute_factor_correlations(nmf_model, source_annotations)
+compute_factor_correlations(factors, source_annotations)
 }
 \arguments{
-\item{nmf_model}{Outputted object from RcppML::nmf run on your source dataset.}
+\item{factors}{A Data.Frame of NMF factors}
 
 \item{source_annotations}{A vector of per-cell annotations for your source dataset. For example, cell-type labels or sample ID.}
 }
