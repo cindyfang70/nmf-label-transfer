@@ -13,7 +13,7 @@
 #' @import SummarizedExperiment
 #' @import methods
 #' @export
-transfer_labels <- function(source, target, assay="logcounts", annotationsName, seed=123,...) {
+transfer_labels <- function(source, target, assay="logcounts", annotationsName, seed=123, save_nmf=TRUE,...) {
 
   if(is(source, "SpatialExperiment")){
     if (!(assay %in% assayNames(source))){
@@ -41,6 +41,10 @@ transfer_labels <- function(source, target, assay="logcounts", annotationsName, 
 
   # 1: run NMF on the source dataset
   source_nmf_mod <- run_nmf(data=source, assay=assay, seed=seed, ...)
+
+  if(save_nmf){
+    saveRDS(source_nmf_mod, "source_nmf_mod.RDS")
+  }
 
   source_factors <- t(source_nmf_mod$h)
   colnames(source_factors) <- paste0("NMF", 1:ncol(source_factors))
