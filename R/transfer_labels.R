@@ -5,6 +5,7 @@
 #' @param assay Name of the assay in `source` to use for NMF
 #' @param annotationsName Name of the annotations in `source` as found in the `colData`
 #' @param seed A random seed
+#' @param ... Additional parameters passed to `run_nmf`
 #'
 #' @return A SingleCellExperiment or SpatialExperiment object
 #'
@@ -47,14 +48,17 @@ transfer_labels <- function(source, target, assay="logcounts", annotationsName, 
   # 2: select the important factors based on correlation
   annots<- colData(source)[[annotationsName]]
   factor_annot_cors <- compute_factor_correlations(source_factors, annots)
-  factors_use <- identify_factors_representing_annotations(factor_annot_cors)
+  factors_use_names <- identify_factors_representing_annotations(factor_annot_cors)
 
   # 3: fit multinomial model on source factors
-  factors_use <- source_factors[,factors_use]
+  factors_use <- source_factors[,factors_use_names]
   multinom_mod <- fit_multinom_model(factors_use, annots)
 
   # 4: project patterns onto target dataset
   projections <- project_factors(source, target, assay, source_nmf_mod)
+  projections <- projections[,factors_use_names]
+
+  print(head(projections))
 
   # 5: predict annotations on target factors
 
@@ -67,4 +71,5 @@ transfer_labels <- function(source, target, assay="logcounts", annotationsName, 
 
   return(preds)
 }
+
 

@@ -42,18 +42,13 @@ find_num_factors <- function(A, ranks = c(50,100,200)){
 #' run_rank_determination_nmf
 #'
 #' @param data A SingleCellExperiment or SpatialExperiment object
-#' @param assay
+#' @param assay string indicating the assay to run NMF on
 #'
-#' @return
-#' @import RcppML singlet SummarizedExperiment SingleCellExperiment S4Vectors, SpatialExperiment
-#' @examples
+#' @return a NMF model object
+#' @import singlet SingleCellExperiment
 run_rank_determination_nmf <- function(data, assay){
-  requireNamespace("SingleCellExperiment")
-  requireNamespace("singlet")
-  requireNamespace("SummarizedExperiment")
-  requireNamespace("S4Vectors")
-  data_nmf <- singlet::RunNMF(data)
-  nmf_mod <- S4Vectors::metadata(data_nmf)$nmf_model
+  data_nmf <- RunNMF(data)
+  nmf_mod <- metadata(data_nmf)$nmf_model
   return(nmf_mod)
 }
 
