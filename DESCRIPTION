@@ -9,18 +9,20 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
 Imports:
-  SingleCellExperiment,
   SpatialExperiment,
   RcppML,
-  singlet,
   SummarizedExperiment,
   nnet,
   methods
 Suggests: 
     testthat (>= 3.0.0),
-    S4Vectors
+    S4Vectors,
+    ExperimentHub,
+    scuttle,
+    spatialLIBD
 Config/testthat/edition: 3
 Depends: 
     R (>= 2.10),
-    SingleCellExperiment
+    SingleCellExperiment, 
+    singlet
 LazyData: true
