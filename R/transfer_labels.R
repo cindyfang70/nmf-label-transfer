@@ -60,6 +60,8 @@ transfer_labels <- function(source, target, assay="logcounts", annotationsName, 
 
   # 4: project patterns onto target dataset
   projections <- project_factors(source, target, assay, source_nmf_mod)
+
+  print(head(projections))
   projections <- projections[,factors_use_names]
 
   print(head(projections))

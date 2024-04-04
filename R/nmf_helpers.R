@@ -87,11 +87,14 @@ project_factors <- function(source, target, assay, nmf_model){
   loadings<-loadings[rownames(loadings) %in% i,]
   loadings<-loadings[match(rowData(target)$gene_name,rownames(loadings)),]
 
+  print(head(loadings))
+
 
   A <- assay(target, assay)
   options(RcppML.threads = 0) #line below doesn't work otherwise
   proj<-RcppML::project(data=as.matrix(A), w=loadings, threads=0, L1=0, mask=NULL)
 
+  print(head(proj))
   factors <- t(proj)/nmf_model$d #scale by the constant factor
   colnames(factors) <- paste0("NMF", 1:ncol(factors))
 
