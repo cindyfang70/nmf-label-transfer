@@ -10,6 +10,7 @@
 fit_multinom_model <- function(factors, source_annotations){
   message("Fitting prediction model")
   design <- cbind(annot=source_annotations, factors)
+  print(head(design))
 
   mod <-  nnet::multinom(annot ~ ., data = design,
                    na.action=na.exclude, maxit=1000)

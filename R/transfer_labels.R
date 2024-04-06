@@ -50,7 +50,7 @@ transfer_labels <- function(source, target, assay="logcounts", annotationsName, 
   colnames(source_factors) <- paste0("NMF", 1:ncol(source_factors))
 
   # 2: select the important factors based on correlation
-  annots<- colData(source)[[annotationsName]]
+  annots<- colData(source)[annotationsName]
   factor_annot_cors <- compute_factor_correlations(source_factors, annots)
   factors_use_names <- identify_factors_representing_annotations(factor_annot_cors)
 
