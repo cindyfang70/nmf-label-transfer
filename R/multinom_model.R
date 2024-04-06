@@ -6,11 +6,10 @@
 #' @return A multinomial model object
 #'
 #' @import nnet
-#' @export
 
 fit_multinom_model <- function(factors, source_annotations){
   message("Fitting prediction model")
-  design <- cbind(annot=source_annotations, factors)
+  design <- as.data.frame(cbind(annot=source_annotations, factors))
   print(head(design))
 
   mod <-  nnet::multinom(annot ~ ., data = design,

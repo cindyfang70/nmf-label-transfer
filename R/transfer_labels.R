@@ -56,7 +56,7 @@ transfer_labels <- function(source, target, assay="logcounts", annotationsName, 
 
   # 3: fit multinomial model on source factors
   factors_use <- source_factors[,factors_use_names]
-  multinom_mod <- fit_multinom_model(factors_use, annots)
+  multinom_mod <- fit_multinom_model(as.data.frame(factors_use), annots)
 
   # 4: project patterns onto target dataset
   projections <- project_factors(source, target, assay, source_nmf_mod)
