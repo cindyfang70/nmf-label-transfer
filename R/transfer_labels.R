@@ -54,21 +54,28 @@ transfer_labels <- function(source, target, assay="logcounts", annotationsName, 
   factor_annot_cors <- compute_factor_correlations(source_factors, annots)
   factors_use_names <- identify_factors_representing_annotations(factor_annot_cors)
 
+
   # 3: fit multinomial model on source factors
   factors_use <- source_factors[,factors_use_names]
-  multinom_mod <- fit_multinom_model(as.data.frame(factors_use), annots)
+
+  # compute neighbourhood mean of each selected NMF factor
+  fcts_nbhd <- compute_nbhd_factors_mean(source, factors_use)
+  multinom_mod <- fit_multinom_model(as.data.frame(fcts_nbhd), annots)
 
   # 4: project patterns onto target dataset
   projections <- project_factors(source, target, assay, source_nmf_mod)
 
-  print(head(projections))
+  #print(head(projections))
   projections <- projections[,factors_use_names]
 
-  print(head(projections))
+  # compute neighbourhood mean of each selected NMF factor
+  fcts_nbhd_target <- compute_nbhd_factors_mean(target, projections)
+
+  print(head(fcts_nbhd_target))
 
   # 5: predict annotations on target factors
 
-  probs <- predict(multinom_mod, newdata=projections, type='probs',
+  probs <- predict(multinom_mod, newdata=fcts_nbhd_target, type='probs',
                    na.action=na.exclude)
 
   preds <- unlist(lapply(1:nrow(probs), function(xx){
