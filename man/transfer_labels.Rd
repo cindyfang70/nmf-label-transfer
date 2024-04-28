@@ -10,6 +10,7 @@ transfer_labels(
   assay = "logcounts",
   annotationsName,
   seed = 123,
+  save_nmf = TRUE,
   ...
 )
 }

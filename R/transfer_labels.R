@@ -1,13 +1,13 @@
 #' Transfer labels from the source dataset to the target dataset
 #'
 #' @param source A SingleCellExperiment or SpatialExperiment object with cell-type or spatial domain labels
-#' @param target A SingleCellExperiment or SpatialExperiment object to transfer labels into
+#' @param target A list of SingleCellExperiment or SpatialExperiment objects to transfer labels into
 #' @param assay Name of the assay in `source` to use for NMF
 #' @param annotationsName Name of the annotations in `source` as found in the `colData`
 #' @param seed A random seed
 #' @param ... Additional parameters passed to `run_nmf`
 #'
-#' @return A SingleCellExperiment or SpatialExperiment object
+#' @return A list of predicted labels for each dataset in `target`
 #'
 #' @import SpatialExperiment
 #' @import SummarizedExperiment
@@ -28,16 +28,11 @@ transfer_labels <- function(source, target, assay="logcounts", annotationsName, 
 
   }
 
-  if (is(target,"SpatialExperiment")){
-    if (!(assay %in% assayNames(target))){
-      stop(sprintf("Assay %s is not found in the target dataset. %s needs to be available in both the source and target datasets.", assay, assay))
-    }
-
-    if(!("gene_name" %in% colnames(rowData(target)))){
-      stop("Please provide gene symbols in your target dataset as a column named 'gene_name' in rowData.")
-    }
-
+  for (i in 1:length(target)){
+    check_targets_validity(target)
   }
+
+
 
   # 1: run NMF on the source dataset
   source_nmf_mod <- run_nmf(data=source, assay=assay, seed=seed, ...)
@@ -59,23 +54,40 @@ transfer_labels <- function(source, target, assay="logcounts", annotationsName, 
   factors_use <- source_factors[,factors_use_names]
 
   # compute neighbourhood mean of each selected NMF factor
-  fcts_nbhd <- compute_nbhd_factors_mean(source, factors_use)
-  multinom_mod <- fit_multinom_model(as.data.frame(fcts_nbhd), annots)
+  multinom_mod <- fit_multinom_model(as.data.frame(factors_use), annots)
 
+  all_preds <- list()
+  for (i in 1:length(target)){
+      preds <- project_and_predict_on_one_target(target[[i]])
+      all_preds[[i]] <- preds
+  }
+
+  return(all_preds)
+}
+
+check_targets_validity <- function(target){
+  if (is(target,"SpatialExperiment")){
+    if (!(assay %in% assayNames(target))){
+      stop(sprintf("Assay %s is not found in the target dataset. %s needs to be available in both the source and target datasets.", assay, assay))
+    }
+
+    if(!("gene_name" %in% colnames(rowData(target)))){
+      stop("Please provide gene symbols in your target dataset as a column named 'gene_name' in rowData.")
+    }
+
+  }
+}
+
+
+project_and_predict_on_one_target <- function(target){
   # 4: project patterns onto target dataset
   projections <- project_factors(source, target, assay, source_nmf_mod)
 
   #print(head(projections))
   projections <- projections[,factors_use_names]
-
-  # compute neighbourhood mean of each selected NMF factor
-  fcts_nbhd_target <- compute_nbhd_factors_mean(target, projections)
-
-  print(head(fcts_nbhd_target))
-
   # 5: predict annotations on target factors
 
-  probs <- predict(multinom_mod, newdata=fcts_nbhd_target, type='probs',
+  probs <- predict(multinom_mod, newdata=projections, type='probs',
                    na.action=na.exclude)
 
   preds <- unlist(lapply(1:nrow(probs), function(xx){
@@ -84,5 +96,3 @@ transfer_labels <- function(source, target, assay="logcounts", annotationsName, 
 
   return(preds)
 }
-
-
