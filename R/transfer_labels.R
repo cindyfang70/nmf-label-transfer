@@ -29,7 +29,7 @@ transfer_labels <- function(source, targets, assay="logcounts", annotationsName,
   }
 
   for (i in 1:length(targets)){
-    check_targets_validity(targets[[i]])
+    check_targets_validity(assay, targets[[i]])
   }
 
 
@@ -65,7 +65,7 @@ transfer_labels <- function(source, targets, assay="logcounts", annotationsName,
   return(all_preds)
 }
 
-check_targets_validity <- function(target){
+check_targets_validity <- function(target, assay){
   if (is(target,"SpatialExperiment")){
     if (!(assay %in% assayNames(target))){
       stop(sprintf("Assay %s is not found in the target dataset. %s needs to be available in both the source and target datasets.", assay, assay))
