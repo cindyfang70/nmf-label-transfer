@@ -13,7 +13,7 @@
 #' @import SummarizedExperiment
 #' @import methods
 #' @export
-transfer_labels <- function(source, target, assay="logcounts", annotationsName, seed=123, save_nmf=TRUE,...) {
+transfer_labels <- function(source, targets, assay="logcounts", annotationsName, seed=123, save_nmf=TRUE,...) {
 
   if(is(source, "SpatialExperiment")){
     if (!(assay %in% assayNames(source))){
@@ -28,8 +28,8 @@ transfer_labels <- function(source, target, assay="logcounts", annotationsName, 
 
   }
 
-  for (i in 1:length(target)){
-    check_targets_validity(target)
+  for (i in 1:length(targets)){
+    check_targets_validity(targets[[i]])
   }
 
 
@@ -57,8 +57,8 @@ transfer_labels <- function(source, target, assay="logcounts", annotationsName, 
   multinom_mod <- fit_multinom_model(as.data.frame(factors_use), annots)
 
   all_preds <- list()
-  for (i in 1:length(target)){
-      preds <- project_and_predict_on_one_target(target[[i]])
+  for (i in 1:length(targets)){
+      preds <- project_and_predict_on_one_target(vis_anno, targets[[i]], "logcounts", source_nmf_mod, factors_use_names)
       all_preds[[i]] <- preds
   }
 
@@ -79,7 +79,7 @@ check_targets_validity <- function(target){
 }
 
 
-project_and_predict_on_one_target <- function(target){
+project_and_predict_on_one_target <- function(source, target, assay, source_nmf_mod, factors_use_names){
   # 4: project patterns onto target dataset
   projections <- project_factors(source, target, assay, source_nmf_mod)
 
