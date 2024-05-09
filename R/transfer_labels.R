@@ -13,86 +13,95 @@
 #' @import SummarizedExperiment
 #' @import methods
 #' @export
-transfer_labels <- function(source, targets, assay="logcounts", annotationsName, seed=123, save_nmf=TRUE,...) {
+transfer_labels.list <- function(targets, source, assay="logcounts", annotationsName, seed=123, save_nmf=TRUE, nmf_path="nmf_mod.RDS",...) {
 
-  if(is(source, "SpatialExperiment")){
-    if (!(assay %in% assayNames(source))){
-      stop(sprintf("Assay %s not found in the source dataset. %s needs to be available in both the source and target datasets.", assay, assay))
-    }
-    if(!(annotationsName %in% colnames(colData(source)))){
-      stop(sprintf("%s is not found in the colData of the source dataset.", annotationsName))
-    }
-    if(!("gene_name" %in% colnames(rowData(source)))){
-      stop("Please provide gene symbols in your source dataset as a column named 'gene_name' in rowData.")
-    }
-
-  }
+  check_source_validity(source, assay, annotationsName)
 
   for (i in 1:length(targets)){
     check_targets_validity(assay, targets[[i]])
   }
 
+  source_outputs <- source_nmf_and_model_fitting(source, assay, seed,
+                                                 save_nmf, nmf_path,
+                                                 annotationsName,...)
 
+  source_nmf_mod <- source_outputs$source_nmf
+  factors_use_names <- source_outputs$factors_use_names
+  multinom_mod <- source_outputs$multinom
 
-  # 1: run NMF on the source dataset
-  source_nmf_mod <- run_nmf(data=source, assay=assay, seed=seed, ...)
-
-  if(save_nmf){
-    saveRDS(source_nmf_mod, "source_nmf_mod.RDS")
-  }
-
-  source_factors <- t(source_nmf_mod$h)
-  colnames(source_factors) <- paste0("NMF", 1:ncol(source_factors))
-
-  # 2: select the important factors based on correlation
-  annots <- colData(source)[[annotationsName]]
-  factor_annot_cors <- compute_factor_correlations(source_factors, annots)
-  factors_use_names <- identify_factors_representing_annotations(factor_annot_cors)
-
-
-  # 3: fit multinomial model on source factors
-  factors_use <- source_factors[,factors_use_names]
-
-  # compute neighbourhood mean of each selected NMF factor
-  multinom_mod <- fit_multinom_model(as.data.frame(factors_use), annots)
-
-  all_preds <- list()
   for (i in 1:length(targets)){
-      preds <- project_and_predict_on_one_target(vis_anno, targets[[i]], "logcounts", source_nmf_mod, factors_use_names)
-      all_preds[[i]] <- preds
+    target <- targets[[i]]
+    # 4: project patterns onto target dataset
+    projections <- project_factors(source, target, assay, source_nmf_mod)
+    reducedDim(target, "nmf_projections") <- projections
+    projections <- projections[,factors_use_names]
+
+    # 5: predict on the projected factors using the multinomial model
+    probs <- predict(multinom_mod, newdata=projections, type='probs',
+                     na.action=na.exclude)
+
+    preds <- unlist(lapply(1:nrow(probs), function(xx){
+      colnames(probs)[which.max(probs[xx,])]
+    }))
+
+
+    colData(target)$nmf_preds <- preds
   }
 
-  return(all_preds)
-}
+  traam.out <- traam(nmf_model=source_nmf_mod,
+                     source=source,
+                     targets=targets,
+                     multinom=multinom_mod,
+                     cors=source_output$factor_annot_cors)
 
-check_targets_validity <- function(target, assay){
-  if (is(target,"SpatialExperiment")){
-    if (!(assay %in% assayNames(target))){
-      stop(sprintf("Assay %s is not found in the target dataset. %s needs to be available in both the source and target datasets.", assay, assay))
-    }
-
-    if(!("gene_name" %in% colnames(rowData(target)))){
-      stop("Please provide gene symbols in your target dataset as a column named 'gene_name' in rowData.")
-    }
-
-  }
+  return(traam.out)
 }
 
 
-project_and_predict_on_one_target <- function(source, target, assay, source_nmf_mod, factors_use_names){
+
+#' @export
+transfer_labels <- function(targets, source, assay="logcounts", annotationsName, seed=123, save_nmf=TRUE,...){
+  UseMethod("transfer_labels")
+}
+
+#' @export
+transfer_labels.SpatialExperiment <- function(targets, source, assay="logcounts", annotationsName, seed=123, save_nmf=TRUE,...){
+
+  check_source_validity(source, assay, annotationsName)
+  check_targets_validity(assay, targets)
+
+  source_outputs <- source_nmf_and_model_fitting(source, assay, seed,
+                                                 save_nmf, nmf_path,
+                                                 annotationsName,...)
+
+  source_nmf_mod <- source_outputs$source_nmf
+  factors_use_names <- source_outputs$factors_use_names
+  multinom_mod <- source_outputs$multinom
+
   # 4: project patterns onto target dataset
-  projections <- project_factors(source, target, assay, source_nmf_mod)
-
-  #print(head(projections))
+  projections <- project_factors(source, targets, assay, source_nmf_mod)
+  reducedDim(targets, "nmf_projections") <- projections
   projections <- projections[,factors_use_names]
-  # 5: predict annotations on target factors
 
+  # 5: predict on the projected factors using the multinomial model
   probs <- predict(multinom_mod, newdata=projections, type='probs',
-                   na.action=na.exclude)
+                     na.action=na.exclude)
 
   preds <- unlist(lapply(1:nrow(probs), function(xx){
-    colnames(probs)[which.max(probs[xx,])]
-  }))
+      colnames(probs)[which.max(probs[xx,])]
+    }))
 
-  return(preds)
+
+  colData(targets)$nmf_preds <- preds
+
+
+  traam.out <- traam(nmf_model=source_nmf_mod,
+                     source=source,
+                     targets=targets,
+                     multinom=multinom_mod,
+                     cors=source_outputs$factor_annot_cors)
+
+  return(traam.out)
 }
+
+
