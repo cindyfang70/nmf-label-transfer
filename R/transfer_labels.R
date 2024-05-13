@@ -52,7 +52,7 @@ transfer_labels.list <- function(targets, source, assay="logcounts", annotations
                      source=source,
                      targets=targets,
                      multinom=multinom_mod,
-                     cors=source_output$factor_annot_cors)
+                     cors=source_outputs$factor_annot_cors)
 
   return(traam.out)
 }
