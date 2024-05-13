@@ -46,6 +46,7 @@ transfer_labels.list <- function(targets, source, assay="logcounts", annotations
 
 
     colData(target)$nmf_preds <- preds
+    targets[[i]] <- target
   }
 
   traam.out <- traam(nmf_model=source_nmf_mod,
