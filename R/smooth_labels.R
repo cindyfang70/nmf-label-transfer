@@ -6,6 +6,7 @@ smooth_label <- function(spe, annotationsName, label, n_neighours=10, cutoff=0.2
 
 #' @importFrom dbscan kNN
 #' this is taken from BANKSY: https://github.com/prabhakarlab/Banksy/blob/bioc/R/cluster.R
+#' @export
 smoother <-
   function(labels_curr,
            locs,
