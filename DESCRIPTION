@@ -13,7 +13,8 @@ Imports:
   RcppML,
   SummarizedExperiment,
   nnet,
-  methods
+  methods,
+  dbscan
 Suggests: 
     testthat (>= 3.0.0),
     S4Vectors,
