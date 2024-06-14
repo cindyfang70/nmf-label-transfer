@@ -1,3 +1,4 @@
+#' @export
 transfer_labels.list <- function(targets, source, assay="logcounts", annotationsName, seed=123, save_nmf=TRUE, nmf_path="nmf_mod.RDS",...) {
 
   check_source_validity(source, assay, annotationsName)
