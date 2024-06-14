@@ -1,18 +1,3 @@
-#' Transfer labels from the source dataset to the target dataset
-#'
-#' @param source A SingleCellExperiment or SpatialExperiment object with cell-type or spatial domain labels
-#' @param target A list of SingleCellExperiment or SpatialExperiment objects to transfer labels into
-#' @param assay Name of the assay in `source` to use for NMF
-#' @param annotationsName Name of the annotations in `source` as found in the `colData`
-#' @param seed A random seed
-#' @param ... Additional parameters passed to `run_nmf`
-#'
-#' @return A list of predicted labels for each dataset in `target`
-#'
-#' @import SpatialExperiment
-#' @import SummarizedExperiment
-#' @import methods
-#' @export
 transfer_labels.list <- function(targets, source, assay="logcounts", annotationsName, seed=123, save_nmf=TRUE, nmf_path="nmf_mod.RDS",...) {
 
   check_source_validity(source, assay, annotationsName)
@@ -59,7 +44,21 @@ transfer_labels.list <- function(targets, source, assay="logcounts", annotations
 }
 
 
-
+#' Transfer labels from the source dataset to the target dataset
+#'
+#' @param source A SingleCellExperiment or SpatialExperiment object with cell-type or spatial domain labels
+#' @param target A list of SingleCellExperiment or SpatialExperiment objects to transfer labels into
+#' @param assay Name of the assay in `source` to use for NMF
+#' @param annotationsName Name of the annotations in `source` as found in the `colData`
+#' @param seed A random seed
+#' @param ... Additional parameters passed to `run_nmf`
+#'
+#' @return A list of predicted labels for each dataset in `target`
+#'
+#' @import SpatialExperiment
+#' @import SummarizedExperiment
+#' @import methods
+#' @export
 #' @export
 transfer_labels <- function(targets, source, assay="logcounts", annotationsName, seed=123, save_nmf=TRUE,...){
   UseMethod("transfer_labels")

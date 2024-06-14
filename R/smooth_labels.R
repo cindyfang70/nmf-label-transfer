@@ -1,11 +1,17 @@
-smooth_label <- function(spe, annotationsName, label, n_neighours=10, cutoff=0.2){
-  spe_coords <- as.data.frame(spatialCoords(spe))
-
-}
-
-
+#' k-Nearest neighbor cluster label smoothing with level-specific thresholding.
+#' @param labels_curr a vector of labels for each observation
+#'
+#' @param locs A dataframe of spatial coordinates corresponding to the observations
+#' @param k An integer scalar specifying number of neighbors for smoothing.
+#' @param props A named list of numeric scalars \eqn{\in [0,1]} specifying a label
+#'   proportions threshold for each level in the labels. If the fraction of neighbors with a certain label
+#'   exceeds this proportion, change the label of the current sample
+#'   (default: 0.5 for each level).The names of the list should correspond to the levels in the label.
+#' @param max_iter An integer scalar specifying the max number of smoothing
+#'   iterations. Set to -1 for smoothing to convergence.
+#' @param verbose A logical scalar representing verbosity
+#'
 #' @importFrom dbscan kNN
-#' this is taken from BANKSY: https://github.com/prabhakarlab/Banksy/blob/bioc/R/cluster.R
 #' @export
 smoother <-
   function(labels_curr,
@@ -14,6 +20,12 @@ smoother <-
            props = NULL,
            max_iter = 10,
            verbose = TRUE) {
+
+    ############################################################################
+    # this code is largely taken from BANKSY:
+    # https://github.com/prabhakarlab/Banksy/blob/bioc/R/cluster.R
+    # but has been adapted to handle different cutoffs for each level in the labels
+    ############################################################################
 
     # Set the proportions to be 0.5 for each class if the user did not specify
     if (is.null(props)){

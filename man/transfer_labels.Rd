@@ -5,8 +5,8 @@
 \title{Transfer labels from the source dataset to the target dataset}
 \usage{
 transfer_labels(
+  targets,
   source,
-  target,
   assay = "logcounts",
   annotationsName,
   seed = 123,
@@ -17,8 +17,6 @@ transfer_labels(
 \arguments{
 \item{source}{A SingleCellExperiment or SpatialExperiment object with cell-type or spatial domain labels}
 
-\item{target}{A SingleCellExperiment or SpatialExperiment object to transfer labels into}
-
 \item{assay}{Name of the assay in \code{source} to use for NMF}
 
 \item{annotationsName}{Name of the annotations in \code{source} as found in the \code{colData}}
@@ -26,9 +24,11 @@ transfer_labels(
 \item{seed}{A random seed}
 
 \item{...}{Additional parameters passed to \code{run_nmf}}
+
+\item{target}{A list of SingleCellExperiment or SpatialExperiment objects to transfer labels into}
 }
 \value{
-A SingleCellExperiment or SpatialExperiment object
+A list of predicted labels for each dataset in \code{target}
 }
 \description{
 Transfer labels from the source dataset to the target dataset
