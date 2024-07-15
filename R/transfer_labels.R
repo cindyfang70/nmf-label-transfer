@@ -1,5 +1,5 @@
 #' @export
-transfer_labels.list <- function(targets, source, assay="logcounts", annotationsName, technicalVarName, seed=123, save_nmf=TRUE, nmf_path="nmf_mod.RDS",...) {
+transfer_labels.list <- function(targets, source, assay="logcounts", annotationsName, technicalVarName, seed=123, nmf_path, save_nmf=TRUE,...) {
 
   check_source_validity(source, assay, annotationsName)
 
@@ -53,8 +53,10 @@ transfer_labels.list <- function(targets, source, assay="logcounts", annotations
 #' @param annotationsName Name of the annotations in `source` as found in the `colData`
 #' @param technicalVarName Name of a technical variable in `source` as found in the `colData`, used to identify NMF factors representing batch effects.
 #' @param seed A random seed
-#' @param ... Additional parameters passed to `run_nmf`
 #' @param save_nmf TRUE/FALSE specifying whether to save the NMF model to disk
+#' @param nmf_path if saving the NMF model to disk, the file path to save it to.
+#' @param ... Additional parameters passed to `run_nmf`
+
 #'
 #' @return A list of predicted labels for each dataset in `target`
 #'
@@ -63,12 +65,12 @@ transfer_labels.list <- function(targets, source, assay="logcounts", annotations
 #' @import methods
 #' @export
 #' @export
-transfer_labels <- function(targets, source, assay="logcounts", annotationsName, technicalVarName, seed=123, save_nmf=TRUE,...){
+transfer_labels <- function(targets, source, assay="logcounts", annotationsName, technicalVarName, seed=123, nmf_path="nmf_mod.RDS", save_nmf=TRUE,...){
   UseMethod("transfer_labels")
 }
 
 #' @export
-transfer_labels.SpatialExperiment <- function(targets, source, assay="logcounts", annotationsName, technicalVarName, seed=123, save_nmf=TRUE,...){
+transfer_labels.SpatialExperiment <- function(targets, source, assay="logcounts", annotationsName, technicalVarName, seed=123, nmf_path, save_nmf=TRUE,...){
 
   check_source_validity(source, assay, annotationsName)
   check_targets_validity(assay, targets)
