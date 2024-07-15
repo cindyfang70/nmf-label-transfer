@@ -11,6 +11,7 @@ transfer_labels(
   annotationsName,
   technicalVarName,
   seed = 123,
+  nmf_path = "nmf_mod.RDS",
   save_nmf = TRUE,
   ...
 )
@@ -27,6 +28,8 @@ transfer_labels(
 \item{technicalVarName}{Name of a technical variable in \code{source} as found in the \code{colData}, used to identify NMF factors representing batch effects.}
 
 \item{seed}{A random seed}
+
+\item{nmf_path}{if saving the NMF model to disk, the file path to save it to.}
 
 \item{save_nmf}{TRUE/FALSE specifying whether to save the NMF model to disk}
 
