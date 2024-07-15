@@ -48,11 +48,13 @@ transfer_labels.list <- function(targets, source, assay="logcounts", annotations
 #' Transfer labels from the source dataset to the target dataset
 #'
 #' @param source A SingleCellExperiment or SpatialExperiment object with cell-type or spatial domain labels
-#' @param target A list of SingleCellExperiment or SpatialExperiment objects to transfer labels into
+#' @param targets A list of SingleCellExperiment or SpatialExperiment objects to transfer labels into
 #' @param assay Name of the assay in `source` to use for NMF
 #' @param annotationsName Name of the annotations in `source` as found in the `colData`
+#' @param technicalVarName Name of a technical variable in `source` as found in the `colData`, used to identify NMF factors representing batch effects.
 #' @param seed A random seed
 #' @param ... Additional parameters passed to `run_nmf`
+#' @param save_nmf TRUE/FALSE specifying whether to save the NMF model to disk
 #'
 #' @return A list of predicted labels for each dataset in `target`
 #'
