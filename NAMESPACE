@@ -2,6 +2,7 @@
 
 S3method(transfer_labels,SpatialExperiment)
 S3method(transfer_labels,list)
+export("%>%")
 export(compute_factor_correlations)
 export(run_nmf)
 export(smoother)
@@ -16,3 +17,4 @@ import(nnet)
 import(singlet)
 import(stats)
 importFrom(dbscan,kNN)
+importFrom(magrittr,"%>%")
