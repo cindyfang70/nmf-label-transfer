@@ -39,7 +39,8 @@ test_that("predicted probabilities are in [0,1]",{
 
   annots<- colData(vis_anno_sub)[[layer_labs]]
   factor_annot_cors <- compute_factor_correlations(source_factors, annots)
-  factors_use <- identify_factors_representing_annotations(factor_annot_cors)
+  technical_cors <- compute_factor_correlations(source_factors, colData(vis_anno_sub)[["sample_id"]])
+  factors_use <- identify_factors_representing_annotations(factor_annot_cors, technical_cors)
 
   factors_use <- source_factors[,factors_use]
   multinom_mod <- fit_multinom_model(factors_use, colData(vis_anno_sub)[[layer_labs]])

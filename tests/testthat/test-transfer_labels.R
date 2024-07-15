@@ -15,7 +15,7 @@ test_that("single sample label transfer works", {
   preds <- transfer_labels(targets=spe, source=vis_anno_sub, assay="logcounts", annotationsName=layer_labs,
                            technicalVarName="sample_id", save_nmf=FALSE, k=10)
 
-  print(preds)
+  #print(preds)
 
   expect_true(length(preds$targets$nmf_preds)==ncol(spe))
 })
