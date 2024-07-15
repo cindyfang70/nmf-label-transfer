@@ -1,5 +1,5 @@
 #' @export
-transfer_labels.list <- function(targets, source, assay="logcounts", annotationsName, seed=123, save_nmf=TRUE, nmf_path="nmf_mod.RDS",...) {
+transfer_labels.list <- function(targets, source, assay="logcounts", annotationsName, technicalVarName, seed=123, save_nmf=TRUE, nmf_path="nmf_mod.RDS",...) {
 
   check_source_validity(source, assay, annotationsName)
 
@@ -9,7 +9,7 @@ transfer_labels.list <- function(targets, source, assay="logcounts", annotations
 
   source_outputs <- source_nmf_and_model_fitting(source, assay, seed,
                                                  save_nmf, nmf_path,
-                                                 annotationsName,...)
+                                                 annotationsName, technicalVarName,...)
 
   source_nmf_mod <- source_outputs$source_nmf
   factors_use_names <- source_outputs$factors_use_names
@@ -61,19 +61,20 @@ transfer_labels.list <- function(targets, source, assay="logcounts", annotations
 #' @import methods
 #' @export
 #' @export
-transfer_labels <- function(targets, source, assay="logcounts", annotationsName, seed=123, save_nmf=TRUE,...){
+transfer_labels <- function(targets, source, assay="logcounts", annotationsName, technicalVarName, seed=123, save_nmf=TRUE,...){
   UseMethod("transfer_labels")
 }
 
 #' @export
-transfer_labels.SpatialExperiment <- function(targets, source, assay="logcounts", annotationsName, seed=123, save_nmf=TRUE,...){
+transfer_labels.SpatialExperiment <- function(targets, source, assay="logcounts", annotationsName, technicalVarName, seed=123, save_nmf=TRUE,...){
 
   check_source_validity(source, assay, annotationsName)
   check_targets_validity(assay, targets)
 
   source_outputs <- source_nmf_and_model_fitting(source, assay, seed,
                                                  save_nmf, nmf_path,
-                                                 annotationsName,...)
+                                                 annotationsName,
+                                                 technicalVarName,...)
 
   source_nmf_mod <- source_outputs$source_nmf
   factors_use_names <- source_outputs$factors_use_names

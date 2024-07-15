@@ -2,25 +2,19 @@
 #' Compute correlation of each NMF factor with annotations in the source dataset
 #'
 #' @param factors A Data.Frame of NMF factors
-#' @param source_annotations A vector of per-cell annotations for your source dataset. For example, cell-type labels or sample ID.
+#' @param source_annotations A vector of per-cell annotations or discrete technical levels for your source dataset. For example, cell-type labels or sample ID.
 #'
 #' @import stats
 #'
 #' @return A NMF factor by unique annotations matrix of correlations between each factor and each unique annotation.
 #' @export
-compute_factor_correlations <- function(factors, source_annotations) {
+compute_factor_correlations <- function(factors, cor_variable) {
 
-  labels <- unique(source_annotations)
-  n_labels <-length(labels)
-  n_obs <- length(source_annotations)
+  cor_variable <- as.factor(cor_variable)
+  #labels <- levels(cor_variable)
 
-  factors.ind <- matrix(,nrow=n_obs, ncol=n_labels)
-  for (i in 1:n_labels){
-    label <- labels[[i]]
-    factors.ind[,i] <- as.integer(source_annotations == label)
-  }
-
-  colnames(factors.ind) <- labels
+  factors.ind <- model.matrix(~0+cor_variable)
+  colnames(factors.ind) <- unlist(lapply(strsplit(colnames(factors.ind), split = "cor_variable"), "[", 2))
   factors.ind <- as.data.frame(factors.ind)
   cor.mat <- cbind(factors, factors.ind)
 
@@ -30,7 +24,8 @@ compute_factor_correlations <- function(factors, source_annotations) {
   return(M)
 }
 
-identify_factors_representing_annotations <- function(correlations, n_factors_per_annot=3){
+
+identify_factors_representing_annotations <- function(correlations, technical_correlations, n_factors_per_annot=3, cor_cutoff=0.3){
   n_domains <- ncol(correlations)
   selected_factors <- c()
   for (i in 1:n_domains){
@@ -43,5 +38,17 @@ identify_factors_representing_annotations <- function(correlations, n_factors_pe
     selected_factors <- c(selected_factors, new.fcts)
   }
   selected_factors <- selected_factors[!is.na(selected_factors)]
-  return(selected_factors)
+
+  print(selected_factors)
+
+  selected_factors_keep <- c()
+  for (i in 1:length(selected_factors)){
+    abs_fct_sample_cor <- abs(technical_correlations[selected_factors[[i]],])
+    if (!any(abs_fct_sample_cor > cor_cutoff)){
+      print(selected_factors[[i]])
+      selected_factors_keep <- c(selected_factors_keep, selected_factors[[i]])
+    }
+  }
+  print(selected_factors_keep)
+  return(selected_factors_keep)
 }
