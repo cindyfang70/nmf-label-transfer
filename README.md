@@ -9,7 +9,7 @@
 Spatial integration of cross-platform spatial transcriptomics data using
 two-stage label transferring.
 
-![nmfLabelTransfer workflow](nmfLabelTransferWorkflow.png)
+![nmfLabelTransfer workflow](https://github.com/cindyfang70/nmfLabelTransfer/blob/main/inst/docs/nmfLabelTransferWorkflow.png)
 ## Installation
 
 You can install the development version of nmfLabelTransfer from
