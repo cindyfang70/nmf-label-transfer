@@ -2,7 +2,7 @@
 #' Compute correlation of each NMF factor with annotations in the source dataset
 #'
 #' @param factors A Data.Frame of NMF factors
-#' @param source_annotations A vector of per-cell annotations or discrete technical levels for your source dataset. For example, cell-type labels or sample ID.
+#' @param cor_variable A vector of per-cell annotations or discrete technical levels for your source dataset. For example, cell-type labels or sample ID.
 #'
 #' @import stats
 #'
