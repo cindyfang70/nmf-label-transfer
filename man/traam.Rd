@@ -4,10 +4,18 @@
 \alias{traam}
 \title{The traam class}
 \usage{
-traam(nmf_model, source, targets, multinom, cors, ...)
+traam(nmf_model, source, targets, multinom, cors)
 }
 \arguments{
-\item{...}{}
+\item{nmf_model}{An NMF model from \code{singlet}}
+
+\item{source}{A SpatialExperiment or SingleCellExperiment object}
+
+\item{targets}{A list of SpatialExperiment or SingleCellExperiment object(s)}
+
+\item{multinom}{An object of class \code{multinom} from \code{nnet}}
+
+\item{cors}{A matrix of correlations between NMF factors and annotations}
 }
 \description{
 The traam class

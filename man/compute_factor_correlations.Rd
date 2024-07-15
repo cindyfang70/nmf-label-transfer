@@ -4,12 +4,12 @@
 \alias{compute_factor_correlations}
 \title{Compute correlation of each NMF factor with annotations in the source dataset}
 \usage{
-compute_factor_correlations(factors, source_annotations)
+compute_factor_correlations(factors, cor_variable)
 }
 \arguments{
 \item{factors}{A Data.Frame of NMF factors}
 
-\item{source_annotations}{A vector of per-cell annotations for your source dataset. For example, cell-type labels or sample ID.}
+\item{cor_variable}{A vector of per-cell annotations or discrete technical levels for your source dataset. For example, cell-type labels or sample ID.}
 }
 \value{
 A NMF factor by unique annotations matrix of correlations between each factor and each unique annotation.

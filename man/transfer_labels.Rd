@@ -9,23 +9,28 @@ transfer_labels(
   source,
   assay = "logcounts",
   annotationsName,
+  technicalVarName,
   seed = 123,
   save_nmf = TRUE,
   ...
 )
 }
 \arguments{
+\item{targets}{A list of SingleCellExperiment or SpatialExperiment objects to transfer labels into}
+
 \item{source}{A SingleCellExperiment or SpatialExperiment object with cell-type or spatial domain labels}
 
 \item{assay}{Name of the assay in \code{source} to use for NMF}
 
 \item{annotationsName}{Name of the annotations in \code{source} as found in the \code{colData}}
 
+\item{technicalVarName}{Name of a technical variable in \code{source} as found in the \code{colData}, used to identify NMF factors representing batch effects.}
+
 \item{seed}{A random seed}
 
-\item{...}{Additional parameters passed to \code{run_nmf}}
+\item{save_nmf}{TRUE/FALSE specifying whether to save the NMF model to disk}
 
-\item{target}{A list of SingleCellExperiment or SpatialExperiment objects to transfer labels into}
+\item{...}{Additional parameters passed to \code{run_nmf}}
 }
 \value{
 A list of predicted labels for each dataset in \code{target}
