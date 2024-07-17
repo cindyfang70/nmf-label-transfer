@@ -6,6 +6,7 @@
 #' @return A multinomial model object
 #'
 #' @import nnet
+#' @importFrom stats predict
 
 fit_multinom_model <- function(factors, source_annotations){
   message("Fitting prediction model")

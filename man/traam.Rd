@@ -17,6 +17,9 @@ traam(nmf_model, source, targets, multinom, cors)
 
 \item{cors}{A matrix of correlations between NMF factors and annotations}
 }
+\value{
+An object of class traam
+}
 \description{
 The traam class
 }
