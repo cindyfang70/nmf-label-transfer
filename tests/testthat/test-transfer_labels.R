@@ -13,7 +13,8 @@ test_that("single sample label transfer works", {
   spe <- scuttle::logNormCounts(spe)
 
   preds <- transfer_labels(targets=spe, source=vis_anno_sub, assay="logcounts", annotationsName=layer_labs,
-                           technicalVarName="sample_id", save_nmf=FALSE, k=10)
+                           technicalVarName="sample_id", save_nmf=FALSE, k=10,
+                           cv_tol=1e-4, tol=1e-5)
 
   #print(preds)
 
