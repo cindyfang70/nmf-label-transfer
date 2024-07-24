@@ -1,5 +1,5 @@
 #' @export
-transfer_labels.list <- function(targets, source, assay="logcounts", annotationsName, technicalVarName, seed=123, nmf_path, save_nmf=TRUE,...) {
+transfer_labels.list <- function(targets, source, assay="logcounts", annotationsName, technicalVarName, seed=123, nmf_path="nmf_mod.RDS", save_nmf=TRUE,...) {
 
   check_source_validity(source, assay, annotationsName)
 
@@ -70,7 +70,7 @@ transfer_labels <- function(targets, source, assay="logcounts", annotationsName,
 }
 
 #' @export
-transfer_labels.SpatialExperiment <- function(targets, source, assay="logcounts", annotationsName, technicalVarName, seed=123, nmf_path, save_nmf=TRUE,...){
+transfer_labels.SpatialExperiment <- function(targets, source, assay="logcounts", annotationsName, technicalVarName, seed=123, nmf_path="nmf_mod.RDS", save_nmf=TRUE,...){
 
   check_source_validity(source, assay, annotationsName)
   check_targets_validity(assay, targets)

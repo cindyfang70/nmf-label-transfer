@@ -13,7 +13,7 @@ compute_factor_correlations <- function(factors, cor_variable) {
   cor_variable <- as.factor(cor_variable)
   #labels <- levels(cor_variable)
 
-  factors.ind <- model.matrix(~0+cor_variable)
+  factors.ind <- model.matrix(~0+cor_variable, na.action="na.pass")
   colnames(factors.ind) <- unlist(lapply(strsplit(colnames(factors.ind), split = "cor_variable"), "[", 2))
   factors.ind <- as.data.frame(factors.ind)
   cor.mat <- cbind(factors, factors.ind)
