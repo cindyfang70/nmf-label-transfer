@@ -12,11 +12,15 @@ compute_factor_correlations <- function(factors, cor_variable) {
 
   cor_variable <- as.factor(cor_variable)
   #labels <- levels(cor_variable)
-
+  print('computing correlation')
   factors.ind <- model.matrix(~0+cor_variable, na.action="na.pass")
+  #print(dim(factors.ind))
   colnames(factors.ind) <- unlist(lapply(strsplit(colnames(factors.ind), split = "cor_variable"), "[", 2))
   factors.ind <- as.data.frame(factors.ind)
+  print(dim(factors.ind))
+  print(dim(factors))
   cor.mat <- cbind(factors, factors.ind)
+  print(head(cor.mat))
 
   M <- stats::cor(cor.mat, use="complete.obs")
   M <- M[grepl("NMF", rownames(M)), !grepl("NMF", colnames(M))]
