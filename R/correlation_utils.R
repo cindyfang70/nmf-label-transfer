@@ -14,7 +14,7 @@ compute_factor_correlations <- function(factors, cor_variable) {
   #labels <- levels(cor_variable)
   print('computing correlation')
   factors.ind <- model.matrix(~0+cor_variable, na.action="na.pass")
-  #print(dim(factors.ind))
+  print(dim(factors.ind))
   colnames(factors.ind) <- unlist(lapply(strsplit(colnames(factors.ind), split = "cor_variable"), "[", 2))
   factors.ind <- as.data.frame(factors.ind)
   print(dim(factors.ind))
