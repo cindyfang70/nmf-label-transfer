@@ -6,7 +6,10 @@ transfer_labels.list <- function(targets, source, assay="logcounts", annotations
   for (i in 1:length(targets)){
     check_targets_validity(assay, targets[[i]])
   }
-
+  if(any(is.na(colData(source)[[annotationsName]]))){
+    warning("NAs in annotations, removing from source dataset")
+    source <- source[,which(!is.na(colData(source)[[annotationsName]]))]
+  }
   source_outputs <- source_nmf_and_model_fitting(source, assay, seed,
                                                  save_nmf, nmf_path,
                                                  annotationsName, technicalVarName,...)
@@ -74,6 +77,10 @@ transfer_labels.SpatialExperiment <- function(targets, source, assay="logcounts"
 
   check_source_validity(source, assay, annotationsName)
   check_targets_validity(assay, targets)
+  if(any(is.na(colData(source)[[annotationsName]]))){
+    warning("NAs in annotations, removing from source dataset")
+    source <- source[,which(!is.na(colData(source)[[annotationsName]]))]
+  }
 
   source_outputs <- source_nmf_and_model_fitting(source, assay, seed,
                                                  save_nmf, nmf_path,
