@@ -87,7 +87,7 @@ project_factors <- function(source, target, assay, nmf_model){
   loadings<-loadings[rownames(loadings) %in% i,]
   loadings <- loadings[unique(rownames(loadings)),] # genes may get duplicated
 
-  target <- target[rownames(target) %in% i, ]
+  target <- target[rowData(target)$gene_name %in% i, ]
   loadings<-loadings[match(rowData(target)$gene_name,rownames(loadings)),]
   #print(any(is.na(loadings)))
 
