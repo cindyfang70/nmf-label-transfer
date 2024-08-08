@@ -10,7 +10,7 @@
 #' @import SingleCellExperiment
 #' @import RcppML
 #' @export
-run_nmf<- function(data, assay, k=NULL, seed=1237,...){
+run_nmf<- function(data, assay, k=NULL, seed=1237){
 
   #add in checks for k
   message("Running NMF")
@@ -18,9 +18,11 @@ run_nmf<- function(data, assay, k=NULL, seed=1237,...){
   if(is.null(k)){
     warning("Number of factors for NMF not specified. Using cross-validation to idenitfy optimal number of factors.", immediate. = TRUE)
       #k <- find_num_factors(A)
+    set.seed(seed)
     model <- run_rank_determination_nmf(data, assay)
   }else{
     A <- as.matrix(assay(data, assay))
+    set.seed(seed)
     model <- singlet::run_nmf(A, rank=k)
   }
 
@@ -46,7 +48,7 @@ find_num_factors <- function(A, ranks = c(50,100,200)){
 #'
 #' @return a NMF model object
 #' @import singlet SingleCellExperiment
-run_rank_determination_nmf <- function(data, assay,...){
+run_rank_determination_nmf <- function(data, assay){
   data_nmf <- RunNMF(data, assay=assay)
   nmf_mod <- S4Vectors::metadata(data_nmf)$nmf_model
   return(nmf_mod)

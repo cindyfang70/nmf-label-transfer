@@ -4,7 +4,7 @@
 \alias{run_rank_determination_nmf}
 \title{run_rank_determination_nmf}
 \usage{
-run_rank_determination_nmf(data, assay, ...)
+run_rank_determination_nmf(data, assay)
 }
 \arguments{
 \item{data}{A SingleCellExperiment or SpatialExperiment object}

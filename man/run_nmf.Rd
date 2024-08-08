@@ -4,7 +4,7 @@
 \alias{run_nmf}
 \title{Run NMF on a dataset}
 \usage{
-run_nmf(data, assay, k = NULL, seed = 1237, ...)
+run_nmf(data, assay, k = NULL, seed = 1237)
 }
 \arguments{
 \item{data}{SingleCellExperiment or SpatialExperiment object}
