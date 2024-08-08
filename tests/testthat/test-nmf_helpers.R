@@ -11,7 +11,7 @@ test_that("outputted NMF factors are all nonnegative", {
   data(sfe)
 
   source_nmf_mod <- run_nmf(data=vis_anno_sub, assay="logcounts", k=10,
-                            seed=seed)
+                            seed=123)
 
   source_factors <- t(source_nmf_mod$h)
 
@@ -32,7 +32,7 @@ test_that("predicted probabilities are in [0,1]",{
   rowData(spe)$gene_name <- rownames(rowData(spe))
 
   source_nmf_mod <- run_nmf(data=vis_anno_sub, assay="logcounts", k=10,
-                            seed=seed)
+                            seed=1237)
 
   source_factors <- t(source_nmf_mod$h)
   colnames(source_factors) <- paste0("NMF", 1:ncol(source_factors))
