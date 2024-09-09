@@ -67,7 +67,36 @@ transfer_labels.list <- function(targets, source, assay="logcounts", annotations
 #' @import SummarizedExperiment
 #' @import methods
 #' @export
-#' @export
+#'
+#' @examples
+#' library(spatialLIBD)
+#' library(SpatialExperiment)
+#'
+#' # fetch the data
+#' ehub <- ExperimentHub::ExperimentHub()
+#' layer_labs <- "BayesSpace_harmony_09"
+#' data_type <- "spatialDLPFC_Visium"
+#' vis_anno <- spatialLIBD::fetch_data(type = data_type, eh = ehub)
+#'
+#' # select reference datasets
+#' vis_anno_ref <- vis_anno[,which(vis_anno$sample_id %in% unique(vis_anno$sample_id)[c(1,2)])]
+#'
+#' # select a target dataset
+#' vis_anno_target <- vis_anno[,which(vis_anno$sample_id %in% unique(vis_anno$sample_id)[3])]
+#'
+#' # transfer labels
+#' res <- transfer_labels(targets=vis_anno_target,
+#'             source=vis_anno_ref,
+#'             assay="logcounts",
+#'             annotationsName=layer_labs,
+#'             technicalVarName="sample_id",
+#'             save_nmf=FALSE, k=10, tol=1e-5)
+#'
+#' target_with_preds <- res$targets
+#' print(target_with_preds)
+#' # display the results
+#' table(target_with_preds$nmf_preds)
+#'
 transfer_labels <- function(targets, source, assay="logcounts", annotationsName, technicalVarName, seed=123, nmf_path="nmf_mod.RDS", save_nmf=TRUE,...){
   UseMethod("transfer_labels")
 }
