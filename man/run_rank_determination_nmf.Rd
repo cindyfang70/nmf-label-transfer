@@ -4,12 +4,14 @@
 \alias{run_rank_determination_nmf}
 \title{run_rank_determination_nmf}
 \usage{
-run_rank_determination_nmf(data, assay)
+run_rank_determination_nmf(data, assay, ...)
 }
 \arguments{
 \item{data}{A SingleCellExperiment or SpatialExperiment object}
 
 \item{assay}{string indicating the assay to run NMF on}
+
+\item{...}{additional arguments passed to singlet::RunNMF}
 }
 \value{
 a NMF model object

@@ -4,7 +4,7 @@
 \alias{run_nmf}
 \title{Run NMF on a dataset}
 \usage{
-run_nmf(data, assay, k = NULL, seed = 1237)
+run_nmf(data, assay, k = NULL, seed = 1237, ...)
 }
 \arguments{
 \item{data}{SingleCellExperiment or SpatialExperiment object}
@@ -14,6 +14,8 @@ run_nmf(data, assay, k = NULL, seed = 1237)
 \item{k}{integer indicating the number of factors for NMF}
 
 \item{seed}{a random seed}
+
+\item{...}{additional arguments passed to singlet::run_nmf or singlet::RunNMF}
 }
 \value{
 NMF model object
