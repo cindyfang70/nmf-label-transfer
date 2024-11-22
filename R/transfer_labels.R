@@ -23,16 +23,19 @@ transfer_labels.list <- function(targets, source, assay="logcounts", annotations
     # 4: project patterns onto target dataset
     projections <- project_factors(source, target, assay, source_nmf_mod)
     reducedDim(target, "nmf_projections") <- projections
-    projections <- projections[,factors_use_names]
+    #projections <- projections[,factors_use_names]
 
     # 5: predict on the projected factors using the multinomial model
-    probs <- predict(multinom_mod, newdata=projections, type='probs',
-                     na.action=na.exclude)
+    # probs <- predict(multinom_mod, newdata=projections, type='probs',
+    #                  na.action=na.exclude)
+    #
+    #
+    #
+    # preds <- unlist(lapply(1:nrow(probs), function(xx){
+    #   colnames(probs)[which.max(probs[xx,])]
+    # }))
 
-    preds <- unlist(lapply(1:nrow(probs), function(xx){
-      colnames(probs)[which.max(probs[xx,])]
-    }))
-
+    preds <- predict(multinom_mod, newx=projections, s = "lambda.min", type = "class")
 
     colData(target)$nmf_preds <- preds
     targets[[i]] <- target
@@ -123,15 +126,17 @@ transfer_labels.SpatialExperiment <- function(targets, source, assay="logcounts"
   # 4: project patterns onto target dataset
   projections <- project_factors(source, targets, assay, source_nmf_mod)
   reducedDim(targets, "nmf_projections") <- projections
-  projections <- projections[,factors_use_names]
+  #projections <- projections[,factors_use_names]
 
   # 5: predict on the projected factors using the multinomial model
-  probs <- predict(multinom_mod, newdata=projections, type='probs',
-                     na.action=na.exclude)
+  # probs <- predict(multinom_mod, newdata=projections, type='probs',
+  #                    na.action=na.exclude)
+  #
+  # preds <- unlist(lapply(1:nrow(probs), function(xx){
+  #     colnames(probs)[which.max(probs[xx,])]
+  #   }))
 
-  preds <- unlist(lapply(1:nrow(probs), function(xx){
-      colnames(probs)[which.max(probs[xx,])]
-    }))
+  preds <- predict(multinom_mod, newx=projections, s = "lambda.min", type = "class")
 
 
   colData(targets)$nmf_preds <- preds

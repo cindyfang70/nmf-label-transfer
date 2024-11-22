@@ -21,8 +21,8 @@ source_nmf_and_model_fitting <- function(source, assay, seed, save_nmf, nmf_path
   factors_use_names <- identify_factors_representing_annotations(factor_annot_cors, factor_tech_cors)
 
   # 3: fit multinomial model on source factors
-  factors_use <- source_factors[,factors_use_names]
-  multinom_mod <- fit_multinom_model(as.data.frame(factors_use), annots)
+  #factors_use <- source_factors[,factors_use_names]
+  multinom_mod <- fit_multinom_model(source_factors, annots)
 
   return(list(source_nmf=source_nmf_mod,
               source_factors=source_factors,
