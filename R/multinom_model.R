@@ -15,7 +15,9 @@ fit_multinom_model <- function(factors, source_annotations){
 
   # mod <-  nnet::multinom(annot ~ ., data = design,
   #                  na.action=na.exclude, maxit=1000)
-  mod <- cv.glmnet(x=factors, y=source_annotations, data=design, family = "multinomial", type.multinomial = "grouped")
+  mod <- cv.glmnet(x=factors, y=source_annotations, data=design,
+                   family = "multinomial", type.multinomial = "grouped",
+                   alpha=0.5)
   #p.fit <- predict(mod, predictors=design[grepl("NMF", colnames(design))], type='probs')
 
   return(mod)
